@@ -5,7 +5,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { Navigate, useNavigate } from 'react-router';
 import { useSession, type Session } from '../SessionContext';
-import { signInWithGoogle,  signInWithCredentials } from '../firebase/auth';
+import { signInWithGoogle } from '../firebase/auth';
 
 
 export default function SignIn() {
@@ -22,22 +22,12 @@ export default function SignIn() {
 
   return (
     <SignInPage
-      providers={[{ id: 'google', name: 'Google' }, { id: 'credentials', name: 'Credentials' }]}
+      providers={[{ id: 'google', name: 'Google' }]}
       signIn={async (provider, formData, callbackUrl) => {
         let result;
         try {
           if (provider.id === 'google') {
             result = await signInWithGoogle();
-          }
-          if (provider.id === 'credentials') {
-            const email = formData?.get('email') as string;
-            const password = formData?.get('password') as string;
-
-            if (!email || !password) {
-              return { error: 'Email and password are required' };
-            }
-
-            result = await signInWithCredentials(email, password);
           }
 
           if (result?.success && result?.user) {
